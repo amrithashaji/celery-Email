@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body style="margin: 20px;">
+    <h1><img alt="Smiley face" width="80" height="80" src="https://media.istockphoto.com/photos/letter-a-3d-red-isolated-on-white-with-shadow-orthogonal-projection-picture-id688125274?k=6&m=688125274&s=612x612&w=0&h=296XCpIcGlHejCFB7rpCecq7xC3O0C1pgvnUl0Z8AKc=">
+    <button id="exp"class="btn"><a href="{% url 'excelGenerator' %}" >export to excel</a></button>
+    <button class="btn" id="printBtn">print <i class="fa fa-print" style="font-size:36px"></i></button></h1>
+    <input style="width:400px;float: right;" class="form-control" id="myInput" type="text" placeholder="Search..">
+    <br><br>
+    <table id="myTable" class="table">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>email</th>
+            <th>timefrom</th>
+            <th>timeto</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="myTable">
+    {% for key, value in employee.items %}
+    <tr class="{{key}}row">
+    <td><p id = "{{key}}" class="{{key}}">{{key}}</p><input class="{{key}} form-control" style="display: none;" type="text" value="{{key}}"></td>
+    <td><p class="{{key}}">{{value.name}}</p><input class="{{key}} form-control" style="display: none;" type="text" value="{{value.name}}"></td>
+    <td><p class="{{key}}">{{value.email}}</p><input class="{{key}} form-control" style="display: none;" type="text" value="{{value.email}}"></td>
+    <td><p class="{{key}}">{{value.time_from}}</p><input class="{{key}} form-control" style="display: none;" type="text" value="{{value.time_from}}" size="8"></td>
+    <td><p class="{{key}}">{{value.time_to}}</p><input class="{{key}} form-control" style="display: none;" type="text" value="{{value.time_to}}" size="8"></td>
+    <td><button id="{{key}}" class="{{key}} edit btn btn-primary">edit</button>
+        <input id="{{key}}" class="save {{key}} btn btn-success" style="display: none;" type="button" value="save">
+        <button id="{{key}}" class=" delete btn btn-danger">Delete</button></td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+</body>
+<script>
+$(document).ready(function(){
+    $("#exp").mouseover(function(){
+        $(this).css("background-color", "pink");
+    });
+    $("#exp").mouseout(function(){
+        $(this).css("background-color", "white");
+    });
+    $("i").mouseover(function(){
+        $("i").css("color", "red");
+    });
+    $("i").mouseout(function(){
+        $("i").css("color", "black");
+    });
+    $('.edit').click(function(){
+        // var obj = "{{employee}}"
+        // $.each( obj, function( key, value ) {
+        //     alert( key + ": " + value );
+        // });
+        $("."+(this.id)).toggle();
+    });
+    $('#printBtn').click(function(){
+        var divToPrint=document.getElementById("myTable");
+        newWin= window.open("");
+        newWin.document.write(divToPrint.outerHTML);
+        newWin.print();
+        newWin.close();
+    });
+    $('.save').click(function(){
+        alert('saved successfully')
+        $("."+(this.id)).toggle();
+    });
+    $('.delete').click(function(){
+        $("."+(this.id)+"row").hide();
+    });
+    $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
+</html>
